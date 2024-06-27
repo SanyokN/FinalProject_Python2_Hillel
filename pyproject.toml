@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "finalproject-python2-hillel"
+version = "0.1.0"
+description = ""
+authors = ["SanyokN <al.nikishin2000@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.111.0"
+flake8 = "^7.1.0"
+black = "^24.4.2"
+isort = "^5.13.2"
+pytest = "^8.2.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
