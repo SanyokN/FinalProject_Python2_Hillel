@@ -12,18 +12,17 @@ class Trip(Base):
     __tablename__ = 'trips'
 
     id = Column(Integer, Sequence('trip_id_seq'), primary_key=True)
-    customer_name = Column(Text, nullable=False)
     checkin_date = Column(Integer, nullable=False)
     checkout_date = Column(Integer, nullable=False)
     country = Column(String, nullable=False)
     price = Column(Float, nullable=False)
     hotel = Column(Text, nullable=False)
-    notes = Column(Text)
+    description = Column(Text)
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
     def __str__(self):
-        return (f'<Trip: {self.customer_name}, {self.checkin_date}; {self.checkout_date}, '
+        return (f'<Trip: {self.checkin_date}; {self.checkout_date}, '
                 f'{self.country}, {self.price}, {self.hotel}>')
 
     __repr__ = __str__

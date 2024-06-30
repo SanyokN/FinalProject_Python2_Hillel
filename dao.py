@@ -1,21 +1,19 @@
 from database import Trip, session
 
 
-def create_trip(customer_name: str,
-                checkin_date: int,
+def create_trip(checkin_date: int,
                 checkout_date: int,
                 country: str,
                 price: float,
                 hotel: str,
-                notes: str | None) -> Trip:
+                description: str) -> Trip:
     trip = Trip(
-        customer_name=customer_name,
         checkin_date=checkin_date,
         checkout_date=checkout_date,
         country=country,
         price=price,
         hotel=hotel,
-        notes=notes
+        description=description
     )
     session.add(trip)
     session.commit()
