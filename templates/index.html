@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+
+  {% block content %}
+  <h1>Туристичне агенство USanka</h1>
+
+
+{% for trip in trips %}
+
+  <div class="card" style="width: 18rem;">
+    <img src="https://m.media-amazon.com/images/I/81BP2Lw7jZL._SL1500_.jpg" class="card-img-top" alt="...">
+    <div class="card-body">
+      <h5 class="card-title">{{ trip.title }}</h5>
+      <p class="card-text">{{ trip.description }}</p>
+      <p class="card-text">{{ trip.price }}</p>
+      <a href="https://store.ababahalamaha.com.ua/uliubleni-virshi" class="btn btn-primary">Детальніше</a>
+    </div>
+  </div>
+
+{% endfor %}
+
+
+  {% endblock %}
