@@ -2,7 +2,7 @@
 name = "finalproject-python2-hillel"
 version = "0.1.0"
 description = ""
-authors = ["SanyokN <al.nikishin2000@gmail.com>"]
+authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -12,6 +12,8 @@ flake8 = "^7.1.0"
 black = "^24.4.2"
 isort = "^5.13.2"
 pytest = "^8.2.2"
+python-dotenv = "^1.0.1"
+sqlalchemy = "^2.0.31"
 
 
 [build-system]

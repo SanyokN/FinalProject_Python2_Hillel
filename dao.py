@@ -1,19 +1,21 @@
 from database import Trip, session
 
 
-def create_trip(checkin_date: int,
-                checkout_date: int,
-                country: str,
-                price: float,
-                hotel: str,
-                description: str) -> Trip:
+def create_trip(
+    checkin_date: int,
+    checkout_date: int,
+    country: str,
+    price: float,
+    hotel: str,
+    description: str,
+) -> Trip:
     trip = Trip(
         checkin_date=checkin_date,
         checkout_date=checkout_date,
         country=country,
         price=price,
         hotel=hotel,
-        description=description
+        description=description,
     )
     session.add(trip)
     session.commit()
@@ -22,7 +24,13 @@ def create_trip(checkin_date: int,
 
 def get_all_trips(limit: int, skip: int, name: str) -> list[Trip]:
     if name:
-        trips = session.query(Trip).filter(Trip.name.icontains(name)).limit(limit).offset(skip).all()
+        trips = (
+            session.query(Trip)
+            .filter(Trip.name.icontains(name))
+            .limit(limit)
+            .offset(skip)
+            .all()
+        )
     else:
         trips = session.query(Trip).limit(limit).offset(skip).all()
     return trips

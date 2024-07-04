@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, Sequence, String, Text, Float, DateTime, create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy import (Column, DateTime, Float, Integer, Sequence, String,
+                        Text, create_engine)
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 import config
 
@@ -9,9 +10,9 @@ Base = declarative_base()
 
 
 class Trip(Base):
-    __tablename__ = 'trips'
+    __tablename__ = "trips"
 
-    id = Column(Integer, Sequence('trip_id_seq'), primary_key=True)
+    id = Column(Integer, Sequence("trip_id_seq"), primary_key=True)
     checkin_date = Column(Integer, nullable=False)
     checkout_date = Column(Integer, nullable=False)
     country = Column(String, nullable=False)
@@ -22,8 +23,10 @@ class Trip(Base):
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
     def __str__(self):
-        return (f'<Trip: {self.checkin_date}; {self.checkout_date}, '
-                f'{self.country}, {self.price}, {self.hotel}>')
+        return (
+            f"<Trip: {self.checkin_date}; {self.checkout_date}, "
+            f"{self.country}, {self.price}, {self.hotel}>"
+        )
 
     __repr__ = __str__
 

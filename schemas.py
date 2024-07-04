@@ -13,7 +13,7 @@ class NewTrip(BaseModel):
 
 
 class TripId(BaseModel):
-    id: int = Field(description='ID of created item')
+    id: int = Field(description="ID of created item")
 
 
 class CreatedTrip(NewTrip, TripId):
