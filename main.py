@@ -4,8 +4,9 @@ from starlette import status
 
 import config
 import dao
+from api_router.api_users import api_router_users
 from database import create_tables
-from schemas import CreatedTrip, DeletedTrip, NewTrip
+from api_router.schemas_trips import CreatedTrip, DeletedTrip, NewTrip
 
 templates = Jinja2Templates(directory="templates")
 
@@ -79,3 +80,6 @@ def index_web(request: Request):
     return templates.TemplateResponse(
         "index.html", {"request": request, "": {}, "title": "Main page"}
     )
+
+
+app.include_router(api_router_users)
