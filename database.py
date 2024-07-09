@@ -1,8 +1,8 @@
-from datetime import datetime
 import uuid
+from datetime import datetime
 
-from sqlalchemy import (Column, DateTime, Float, Integer, Sequence, String,
-                        Text, create_engine, UUID, Boolean)
+from sqlalchemy import (UUID, Boolean, Column, DateTime, Float, Integer,
+                        Sequence, String, Text, create_engine)
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 import config
@@ -11,7 +11,7 @@ Base = declarative_base()
 
 
 class BaseInfoMixin:
-    id = Column(Integer, Sequence('trip_id_seq'), primary_key=True)
+    id = Column(Integer, Sequence("trip_id_seq"), primary_key=True)
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
@@ -36,7 +36,7 @@ class Trip(BaseInfoMixin, Base):
 
 
 class User(BaseInfoMixin, Base):
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
     name = Column(String, index=True)
     surname = Column(String, index=True)
@@ -47,7 +47,7 @@ class User(BaseInfoMixin, Base):
     is_admin = Column(Boolean, default=False)
 
     def __str__(self):
-        return f'<User: {self.id=}; {self.name=}, {self.surname=}>'
+        return f"<User: {self.id=}; {self.name=}, {self.surname=}>"
 
     __repr__ = __str__
 

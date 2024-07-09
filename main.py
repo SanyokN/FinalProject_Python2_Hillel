@@ -5,8 +5,8 @@ from starlette import status
 import config
 import dao
 from api_router.api_users import api_router_users
-from database import create_tables
 from api_router.schemas_trips import CreatedTrip, DeletedTrip, NewTrip
+from database import create_tables
 
 templates = Jinja2Templates(directory="templates")
 

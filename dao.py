@@ -1,8 +1,8 @@
 import uuid
 
-from database import Trip, session, User
 from fastapi import HTTPException
 
+from database import Trip, User, session
 from utils.utils_hashlib import get_password_hash
 
 
@@ -82,7 +82,7 @@ def get_user_by_uuid(user_uuid: uuid.UUID) -> User | None:
 
 def activate_user_account(user: User) -> User:
     if user.is_verified:
-        raise HTTPException(status_code=400, detail='Already was verified')
+        raise HTTPException(status_code=400, detail="Already was verified")
     user.is_verified = True
     session.add(user)
     session.commit()
