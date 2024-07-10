@@ -1,36 +1,19 @@
-from fastapi import FastAPI, HTTPException, Path, Query, Request
-from fastapi.templating import Jinja2Templates
+from fastapi import APIRouter, HTTPException, Path, Query
 from starlette import status
 
-import config
 import dao
-from api_router.api_users import api_router_users
 from api_router.schemas_trips import CreatedTrip, DeletedTrip, NewTrip
-from database import create_tables
 
-templates = Jinja2Templates(directory="templates")
-
-
-def lifespan(app: FastAPI):
-    create_tables()
-    yield
+api_router_trips = APIRouter(prefix="/api/trips", tags=["API", "Trips"])
 
 
-app = FastAPI(
-    debug=config.DEBUG,
-    lifespan=lifespan,
-)
-
-
-@app.post(
-    "/api/trips/create/", status_code=status.HTTP_201_CREATED, tags=["API", "Trips"]
-)
+@api_router_trips.post("/create/", status_code=status.HTTP_201_CREATED)
 def create_trip(new_trip: NewTrip) -> CreatedTrip:
     created_trip = dao.create_trip(**new_trip.model_dump())
     return created_trip
 
 
-@app.get("/api/trips/", tags=["API", "Trips"])
+@api_router_trips.get("/")
 def get_trips(
     limit: int = Query(default=5, gt=0, le=50, description="Number of trips"),
     skip: int = Query(default=0, ge=0, description="How many to skip"),
@@ -40,7 +23,7 @@ def get_trips(
     return trips
 
 
-@app.get("/api/trips/{trip_id}", tags=["API", "Trips"])
+@api_router_trips.get("/{trip_id}")
 def get_trip(
     trip_id: int = Path(gt=0, description="ID of the trip"),
 ) -> CreatedTrip:
@@ -50,7 +33,7 @@ def get_trip(
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
 
 
-@app.put("/api/trips/{trip_id}", tags=["API", "Trips"])
+@api_router_trips.put("/{trip_id}")
 def update_trip(
     updated_trip: NewTrip,
     trip_id: int = Path(gt=0, description="ID of the trip"),
@@ -63,7 +46,7 @@ def update_trip(
     return trip
 
 
-@app.delete("/api/trips/{trip_id}", tags=["API", "Trips"])
+@api_router_trips.delete("/{trip_id}")
 def delete_trip(
     trip_id: int = Path(gt=0, description="ID of the trip"),
 ) -> DeletedTrip:
@@ -72,14 +55,3 @@ def delete_trip(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
     dao.delete_trip(trip_id=trip_id)
     return DeletedTrip(id=trip_id)
-
-
-@app.get("/", include_in_schema=False)
-def index_web(request: Request):
-
-    return templates.TemplateResponse(
-        "index.html", {"request": request, "": {}, "title": "Main page"}
-    )
-
-
-app.include_router(api_router_users)
