@@ -11,11 +11,16 @@ ins:
 		poetry add isort
 		poetry add pytest
 
-.PHONY: c
-c:
+.PHONY: check
+check:
 	@echo 'Starting code correction...'
 	black .
 	isort .
 	flake8 .
 	pytest .
 	@echo 'FINISH'
+
+.PHONY: run
+run:
+	python main.py
+	uvicorn main:app --reload

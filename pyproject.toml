@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-fastapi = "^0.111.0"
+fastapi = {extras = ["all"], version = "^0.112.0"}
 flake8 = "^7.1.0"
 black = "^24.4.2"
 isort = "^5.13.2"
