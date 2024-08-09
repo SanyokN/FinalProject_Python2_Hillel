@@ -1,6 +1,7 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -10,9 +11,28 @@
         </li>
       </ul>
       <form class="d-flex" role="search" method="post" action="{{ url_for('index') }}">
-        <input class="form-control me-2" type="search" name="query" placeholder="Where are we going?" aria-label="Search">
+        <input class="form-control me-2" type="search" name="query" placeholder="Where are we going?"
+               aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
+      {% if not user %}
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{{ url_for('web_register') }}">Sign up</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{{ url_for('web_register') }}">Log in</a>
+        </li>
+      </ul>
+      {% else %}
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <p class="nav-link active" >Welcome, {{ user.name }}</p>
+        </li>
+      </ul>
+      {% endif %}
     </div>
   </div>
 </nav>
