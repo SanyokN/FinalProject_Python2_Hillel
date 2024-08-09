@@ -1,23 +1,26 @@
 {% extends 'base.html' %}
 
 
-  {% block content %}
-  <h1>Туристичне агенство USanka</h1>
+{% block content %}
 
+<div class="container">
+    <div class="row pt-2 pb-2 container">
 
-{% for trip in trips %}
+    {% for trip in trips %}
+        <div class="card pb-2 pt-2 pl-2 pr-2" style="width: 18rem; margin: 1rem;">
+          <img src="{{ trip.cover_url }}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">{{ trip.hotel }}, {{ trip.country }}</h5>
+              <h6 class="card-title">{{ trip.checkin_day }}.{{ trip.checkin_month }}.{{ trip.checkin_year }} -
+              {{ trip.checkout_day }}.{{ trip.checkout_month }}.{{ trip.checkout_year }}</h6>
+            <p class="card-text">{{ trip.description|truncate(80, False) }}</p>
+              <p class="card-text">{{ trip.price }} $ / person</p>
+            <a href="{{ url_for('get_trip_by_id_web', trip_id=trip.id) }}" class="btn btn-primary">Details</a>
+          </div>
+        </div>
 
-  <div class="card" style="width: 18rem;">
-    <img src="https://m.media-amazon.com/images/I/81BP2Lw7jZL._SL1500_.jpg" class="card-img-top" alt="...">
-    <div class="card-body">
-      <h5 class="card-title">{{ trip.title }}</h5>
-      <p class="card-text">{{ trip.description }}</p>
-      <p class="card-text">{{ trip.price }}</p>
-      <a href="https://store.ababahalamaha.com.ua/uliubleni-virshi" class="btn btn-primary">Детальніше</a>
+    {% endfor %}
+
     </div>
-  </div>
-
-{% endfor %}
-
-
-  {% endblock %}
+</div>
+{% endblock %}

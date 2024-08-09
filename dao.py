@@ -7,20 +7,30 @@ from utils.utils_hashlib import get_password_hash
 
 
 def create_trip(
-    checkin_date: int,
-    checkout_date: int,
+    checkin_day: int,
+    checkin_month: int,
+    checkin_year: int,
+    checkout_day: int,
+    checkout_month: int,
+    checkout_year: int,
     country: str,
     price: float,
     hotel: str,
     description: str,
+    cover_url,
 ) -> Trip:
     trip = Trip(
-        checkin_date=checkin_date,
-        checkout_date=checkout_date,
+        checkin_day=checkin_day,
+        checkin_month=checkin_month,
+        checkin_year=checkin_year,
+        checkout_day=checkout_day,
+        checkout_month=checkout_month,
+        checkout_year=checkout_year,
         country=country,
         price=price,
         hotel=hotel,
         description=description,
+        cover_url=str(cover_url),
     )
     session.add(trip)
     session.commit()

@@ -19,16 +19,22 @@ class BaseInfoMixin:
 class Trip(BaseInfoMixin, Base):
     __tablename__ = "trips"
 
-    checkin_date = Column(Integer, nullable=False)
-    checkout_date = Column(Integer, nullable=False)
+    checkin_day = Column(Integer, nullable=False)
+    checkin_month = Column(Integer, nullable=False)
+    checkin_year = Column(Integer, nullable=False)
+    checkout_day = Column(Integer, nullable=False)
+    checkout_month = Column(Integer, nullable=False)
+    checkout_year = Column(Integer, nullable=False)
     country = Column(String, nullable=False)
     price = Column(Float, nullable=False)
     hotel = Column(Text, nullable=False)
     description = Column(Text)
+    cover_url = Column(Text, nullable=False)
 
     def __str__(self):
         return (
-            f"<Trip: {self.checkin_date=}; {self.checkout_date=}, "
+            f"<Trip: {self.id=}, {self.checkin_day=}.{self.checkin_month=}.{self.checkin_year=} - "
+            f"{self.checkout_day=}.{self.checkout_month=}.{self.checkout_year=}, "
             f"{self.country=}, {self.price=}, {self.hotel=}>"
         )
 

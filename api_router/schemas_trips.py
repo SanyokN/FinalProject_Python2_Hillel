@@ -1,15 +1,20 @@
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, HttpUrl
 
 
 class NewTrip(BaseModel):
-    checkin_date: int = Field()
-    checkout_date: int = Field()
+    checkin_day: int = Field()
+    checkin_month: int = Field()
+    checkin_year: int = Field()
+    checkout_day: int = Field()
+    checkout_month: int = Field()
+    checkout_year: int = Field()
     country: str = Field()
     price: float = Field(ge=0.01, examples=[100.78])
     hotel: str = Field()
     description: str = Field(default="")
+    cover_url: HttpUrl
 
 
 class TripId(BaseModel):
