@@ -22,5 +22,4 @@ check:
 
 .PHONY: run
 run:
-	python main.py
-	uvicorn main:app --reload
+	uvicorn main:app --reload --port 9000
