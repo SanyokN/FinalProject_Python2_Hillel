@@ -9,7 +9,7 @@ api_router_trips = APIRouter(prefix="/api/trips", tags=["API", "Trips"])
 
 @api_router_trips.post("/create/", status_code=status.HTTP_201_CREATED)
 def create_trip(new_trip: NewTrip) -> CreatedTrip:
-    created_trip = dao.create_trip(**new_trip.model_dump())
+    created_trip = dao.create_trip_dao(**new_trip.model_dump())
     return created_trip
 
 
@@ -19,7 +19,7 @@ def get_trips(
     skip: int = Query(default=0, ge=0, description="How many to skip"),
     name: str = Query(default="", description="Part of the trip name"),
 ) -> list[CreatedTrip]:
-    trips = dao.get_all_trips(limit=limit, skip=skip, name=name)
+    trips = dao.get_all_trips_dao(limit=limit, skip=skip, name=name)
     return trips
 
 
@@ -27,7 +27,7 @@ def get_trips(
 def get_trip(
     trip_id: int = Path(gt=0, description="ID of the trip"),
 ) -> CreatedTrip:
-    trip = dao.get_trip_by_id(trip_id=trip_id)
+    trip = dao.get_trip_by_id_dao(trip_id=trip_id)
     if trip:
         return trip
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
@@ -38,11 +38,11 @@ def update_trip(
     updated_trip: NewTrip,
     trip_id: int = Path(gt=0, description="ID of the trip"),
 ) -> CreatedTrip:
-    trip = dao.get_trip_by_id(trip_id=trip_id)
+    trip = dao.get_trip_by_id_dao(trip_id=trip_id)
     if not trip:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
 
-    trip = dao.update_trip(trip_id, updated_trip.model_dump())
+    trip = dao.update_trip_dao(trip_id, updated_trip.model_dump())
     return trip
 
 
@@ -50,8 +50,8 @@ def update_trip(
 def delete_trip(
     trip_id: int = Path(gt=0, description="ID of the trip"),
 ) -> DeletedTrip:
-    trip = dao.get_trip_by_id(trip_id=trip_id)
+    trip = dao.get_trip_by_id_dao(trip_id=trip_id)
     if not trip:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
-    dao.delete_trip(trip_id=trip_id)
+    dao.delete_trip_dao(trip_id=trip_id)
     return DeletedTrip(id=trip_id)

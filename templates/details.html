@@ -5,8 +5,8 @@
         <img src="{{ trip.cover_url }}" class="card-img-top" alt="...">
         <div class="card-body">
             <h5 class="card-title">{{ trip.hotel }}, {{ trip.country }}</h5>
-            <h6 class="card-title">{{ trip.checkin_day }}.{{ trip.checkin_month }}.{{ trip.checkin_year }} -
-                {{ trip.checkout_day }}.{{ trip.checkout_month }}.{{ trip.checkout_year }}</h6>
+            <h6 class="card-title">Check-in date: {{ trip.checkin_date }}
+                <br>Check-out date: {{ trip.checkout_date }}</h6>
             <p class="card-text">{{ trip.description }}</p>
         </div>
     </div>

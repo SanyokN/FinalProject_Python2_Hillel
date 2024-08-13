@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import (UUID, Boolean, Column, DateTime, Float, Integer,
+from sqlalchemy import (UUID, Boolean, Column, Date, DateTime, Float, Integer,
                         Sequence, String, Text, create_engine)
 from sqlalchemy.orm import declarative_base, sessionmaker
 
@@ -19,12 +19,8 @@ class BaseInfoMixin:
 class Trip(BaseInfoMixin, Base):
     __tablename__ = "trips"
 
-    checkin_day = Column(Integer, nullable=False)
-    checkin_month = Column(Integer, nullable=False)
-    checkin_year = Column(Integer, nullable=False)
-    checkout_day = Column(Integer, nullable=False)
-    checkout_month = Column(Integer, nullable=False)
-    checkout_year = Column(Integer, nullable=False)
+    checkin_date = Column(Date, nullable=False)
+    checkout_date = Column(Date, nullable=False)
     country = Column(String, nullable=False)
     price = Column(Float, nullable=False)
     hotel = Column(Text, nullable=False)
@@ -33,9 +29,8 @@ class Trip(BaseInfoMixin, Base):
 
     def __str__(self):
         return (
-            f"<Trip: {self.id=}, {self.checkin_day=}.{self.checkin_month=}.{self.checkin_year=} - "
-            f"{self.checkout_day=}.{self.checkout_month=}.{self.checkout_year=}, "
-            f"{self.country=}, {self.price=}, {self.hotel=}>"
+            f"<Trip: {self.id=}, {self.checkin_date=} - {self.checkout_date=}, "
+            f"{self.country=}, {self.price=} $, {self.hotel=}>"
         )
 
     __repr__ = __str__
@@ -59,8 +54,7 @@ class User(BaseInfoMixin, Base):
 
 
 engine = create_engine(config.DB_PATH, echo=config.DEBUG)
-
-Session = sessionmaker(bind=engine)
+Session = sessionmaker(bind=engine, expire_on_commit=False)
 session = Session()
 
 

@@ -16,22 +16,22 @@ def create_user(
     new_user: RegisterUserRequest,
     background_tasks: BackgroundTasks,
 ) -> BaseUserInfo:
-    maybe_user = dao.get_user_by_email(new_user.email)
+    maybe_user = dao.get_user_by_email_dao(new_user.email)
     if maybe_user:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=f"User with email {new_user.email} already exists",
         )
 
-    created_user = dao.create_user(**new_user.model_dump())
+    created_user = dao.create_user_dao(**new_user.model_dump())
     background_tasks.add_task(confirm_registration, created_user, request.base_url)
     return created_user
 
 
 @api_router_users.get("/verify/{user_uuid}")
 def verify_user_account(user_uuid: uuid.UUID):
-    maybe_user = dao.get_user_by_uuid(user_uuid)
+    maybe_user = dao.get_user_by_uuid_dao(user_uuid)
     if not maybe_user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Wrong data")
-    dao.activate_user_account(maybe_user)
+    dao.activate_user_account_dao(maybe_user)
     return {"verified": True, "user_email": maybe_user.email}

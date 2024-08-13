@@ -7,7 +7,7 @@ from database import create_tables
 from web_router.web import web_router
 
 
-def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI):
     create_tables()
     yield
 
