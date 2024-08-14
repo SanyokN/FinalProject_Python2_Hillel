@@ -30,11 +30,11 @@ def create_trip_dao(
     return trip
 
 
-def get_all_trips_dao(limit: int, skip: int, name: str | None) -> list[Trip]:
-    if name:
+def get_all_trips_dao(limit: int, skip: int, country: str | None) -> list[Trip]:
+    if country:
         trips = (
             session.query(Trip)
-            .filter(Trip.name.icontains(name))
+            .filter(Trip.country.icontains(country))
             .limit(limit)
             .offset(skip)
             .all()

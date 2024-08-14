@@ -1,8 +1,9 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import (UUID, Boolean, Column, Date, DateTime, Float, Integer,
-                        Sequence, String, Text, create_engine)
+from sqlalchemy import (UUID, Boolean, Column, Date, DateTime, Float,
+                        ForeignKey, Integer, Sequence, String, Text,
+                        create_engine)
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 import config
@@ -49,6 +50,34 @@ class User(BaseInfoMixin, Base):
 
     def __str__(self):
         return f"<User: {self.id=}; {self.name=}, {self.surname=}>"
+
+    __repr__ = __str__
+
+
+class Order(BaseInfoMixin, Base):
+    __tablename__ = "orders"
+    user_id = Column(ForeignKey("users.id"), nullable=False)
+    is_closed = Column(Boolean, default=False)
+
+    def __str__(self):
+        return f"<Order: {self.id=}; {self.user_id=}; {self.is_closed=}>"
+
+    __repr__ = __str__
+
+
+class OrderTrip(BaseInfoMixin, Base):
+    __tablename__ = "order_trips"
+    order_id = Column(ForeignKey("orders.id"), nullable=False)
+    trip_id = Column(ForeignKey("trips.id"), nullable=False)
+    price = Column(Float, nullable=False, default=10.0)
+    people_quantity = Column(Integer, nullable=False, default=0)
+
+    @property
+    def cost(self):
+        return self.people_quantity * self.price
+
+    def __str__(self):
+        return f"<OrderTrip: {self.id=}; {self.order_id=}; {self.people_quantity=}; {self.price=}, cost={self.cost}>"
 
     __repr__ = __str__
 

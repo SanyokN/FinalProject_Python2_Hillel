@@ -7,6 +7,7 @@ import dao
 from background_tasks.confirm_registration import confirm_registration
 from dao import get_all_trips_dao, get_trip_by_id_dao
 from utils.jwt_auth import get_user_web, set_cookies_web
+from utils.utils_hashlib import verify_password
 
 templates = Jinja2Templates(directory="templates")
 web_router = APIRouter(prefix="")
@@ -40,6 +41,11 @@ def index(request: Request, user=Depends(get_user_web), query: str = Form(None))
     return response_with_cookies
 
 
+@web_router.post("/add-trip-to-cart/{trip_id}/")
+def add_trip_to_cart(trip_id: int):
+    pass
+
+
 @web_router.get("/register/", include_in_schema=True)
 @web_router.post("/register/", include_in_schema=True)
 def web_register(
@@ -63,7 +69,7 @@ def web_register(
     context = {
         "request": request,
         "title": "Register",
-        "trips": get_all_trips_dao(limit=100, skip=0, name=""),
+        "trips": get_all_trips_dao(limit=100, skip=0, country=""),
         "user": maybe_user,
     }
     if not maybe_user:
@@ -74,3 +80,55 @@ def web_register(
     response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
     response_with_cookies = set_cookies_web(context["user"], response)
     return response_with_cookies
+
+
+@web_router.get("/login/", include_in_schema=True)
+@web_router.post("/login/", include_in_schema=True)
+def web_login(
+    request: Request,
+    email: str = Form(None),
+    password: str = Form(None),
+    user=Depends(get_user_web),
+):
+    if user:
+        redirect_url = request.url_for("index")
+        response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
+        response_with_cookies = set_cookies_web(user, response)
+        return response_with_cookies
+    context = {"request": request}
+    if request.method == "GET":
+        context["title"] = "Login"
+        return templates.TemplateResponse("login.html", context=context)
+    maybe_user = dao.get_user_by_email_dao(email)
+    if not maybe_user:
+        context["title"] = "Login"
+        context["error"] = True
+        context["email_value"] = email
+        return templates.TemplateResponse("login.html", context=context)
+    if verify_password(password, maybe_user.hashed_password):
+        context = {
+            "title": "Login",
+            "trips": get_all_trips_dao(limit=100, skip=0, country=""),
+            "user": maybe_user,
+            **context,
+        }
+        response = templates.TemplateResponse("index.html", context=context)
+        response_with_cookies = set_cookies_web(user, response)
+        return response_with_cookies
+    context["title"] = "Login"
+    context["error"] = True
+    context["email_value"] = email
+    return templates.TemplateResponse("login.html", context=context)
+
+
+@web_router.get("/logout/", include_in_schema=True)
+def web_logout(request: Request):
+    context = {
+        "request": request,
+        "trips": get_all_trips_dao(50, 0, ""),
+        "title": "Main page",
+        "user": None,
+    }
+    response = templates.TemplateResponse("index.html", context=context)
+    response.delete_cookie(key="token_user_usanka")
+    return response
