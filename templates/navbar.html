@@ -10,10 +10,8 @@
           <a class="nav-link active" aria-current="page" href="{{ url_for('index') }}">Home</a>
         </li>
       </ul>
-      <form class="d-flex" role="search" method="post" action="{{ url_for('index') }}">
-        <input class="form-control me-2" type="search" name="query" placeholder="Where are we going?"
-               aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
+      <form class="d-flex" role="search" method="get" action="{{ url_for('search') }}">
+        <button class="btn btn-outline-success" type="submit">Search for a trip</button>
       </form>
       {% if not user %}
       <ul class="navbar-nav">
