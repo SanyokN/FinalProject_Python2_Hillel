@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import (UUID, Boolean, Column, Date, DateTime, Float,
                         ForeignKey, Integer, Sequence, String, Text,
                         create_engine)
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
 import config
 
@@ -27,6 +27,7 @@ class Trip(BaseInfoMixin, Base):
     hotel = Column(Text, nullable=False)
     description = Column(Text)
     cover_url = Column(Text, nullable=False)
+    trips = relationship("OrderTrip", back_populates="trip")
 
     def __str__(self):
         return (
@@ -70,14 +71,19 @@ class OrderTrip(BaseInfoMixin, Base):
     order_id = Column(ForeignKey("orders.id"), nullable=False)
     trip_id = Column(ForeignKey("trips.id"), nullable=False)
     price = Column(Float, nullable=False, default=10.0)
-    people_quantity = Column(Integer, nullable=False, default=0)
+    adults_quantity = Column(Integer, nullable=False, default=1)
+    children_quantity = Column(Integer, nullable=False, default=0)
+    trip = relationship("Trip", back_populates="trips")
 
     @property
     def cost(self):
-        return self.people_quantity * self.price
+        return self.price * (self.adults_quantity + self.children_quantity / 2)
 
     def __str__(self):
-        return f"<OrderTrip: {self.id=}; {self.order_id=}; {self.people_quantity=}; {self.price=}, cost={self.cost}>"
+        return (
+            f"<OrderTrip: {self.id=}; {self.order_id=}; {self.adults_quantity=}; "
+            f"{self.children_quantity=}; {self.price=}, cost={self.cost}>"
+        )
 
     __repr__ = __str__
 

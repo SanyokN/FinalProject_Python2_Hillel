@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row pt-2 pb-2 container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name of the hotel</th>
+                    <th scope="col">Number of adults</th>
+                    <th scope="col">Number of children</th>
+                    <th scope="col">Total value of the position, $</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for order_trip in cart %}
+                <tr>
+                    <td>{{ order_trip.trip.hotel }}, {{ order_trip.trip.country }}</td>
+                    <td>{{ order_trip.adults_quantity }}</td>
+                    <td>{{ order_trip.children_quantity }}</td>
+                    <td>{{ order_trip.cost }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

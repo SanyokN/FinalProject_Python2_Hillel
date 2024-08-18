@@ -17,9 +17,9 @@ def create_trip(new_trip: NewTrip) -> CreatedTrip:
 def get_trips(
     limit: int = Query(default=5, gt=0, le=50, description="Number of trips"),
     skip: int = Query(default=0, ge=0, description="How many to skip"),
-    name: str = Query(default="", description="Part of the trip name"),
+    country: str = Query(default="", description="Country to go"),
 ) -> list[CreatedTrip]:
-    trips = dao.get_all_trips_dao(limit=limit, skip=skip, name=name)
+    trips = dao.get_all_trips_dao(limit=limit, skip=skip, country=country)
     return trips
 
 

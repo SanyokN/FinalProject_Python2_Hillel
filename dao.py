@@ -2,8 +2,10 @@ import uuid
 from datetime import date
 
 from fastapi import HTTPException
+from sqlalchemy import select
+from sqlalchemy.orm import joinedload
 
-from database import Trip, User, session
+from database import OrderTrip, Trip, User, session
 from utils.utils_hashlib import get_password_hash
 
 
@@ -95,3 +97,24 @@ def activate_user_account_dao(user: User) -> User:
     session.commit()
     session.refresh(user)
     return user
+
+
+def get_or_create(model, **kwargs):
+    query = select(model).filter_by(**kwargs)
+    instance = session.execute(query).scalar_one_or_none()
+    if instance:
+        return instance
+    instance = model(**kwargs)
+    session.add(instance)
+    session.commit()
+    return instance
+
+
+def fetch_order_trips(order_id: int) -> list:
+    query = (
+        select(OrderTrip)
+        .filter(OrderTrip.order_id == order_id)
+        .options(joinedload(OrderTrip.trip))
+    )
+    result = session.execute(query).scalars().all()
+    return result

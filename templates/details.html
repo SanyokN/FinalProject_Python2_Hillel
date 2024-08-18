@@ -9,7 +9,8 @@
                 <br>Check-out date: {{ trip.checkout_date }}</h6>
             <p class="card-text">{{ trip.description }}</p>
             {% if user %}
-            <form method="post" action="{{ url_for('add_trip_to_cart', trip_id=trip.id) }}">
+            <form method="post" action="{{ url_for('add_trip_to_cart') }}">
+                <input type="number" name="trip_id" value="{{trip.id}}" hidden="">
                 <button type="submit" class="btn btn-success">Buy</button>
             </form>
             {% endif %}
