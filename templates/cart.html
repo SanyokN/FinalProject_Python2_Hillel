@@ -6,8 +6,8 @@
             <thead>
                 <tr>
                     <th scope="col">Name of the hotel</th>
-                    <th scope="col">Number of adults</th>
-                    <th scope="col">Number of children</th>
+                    <th scope="col" style="text-align: center;">Number of adults</th>
+                    <th scope="col" style="text-align: center;">Number of children</th>
                     <th scope="col">Total value of the position, $</th>
                 </tr>
             </thead>
@@ -15,9 +15,45 @@
             {% for order_trip in cart %}
                 <tr>
                     <td>{{ order_trip.trip.hotel }}, {{ order_trip.trip.country }}</td>
-                    <td>{{ order_trip.adults_quantity }}</td>
-                    <td>{{ order_trip.children_quantity }}</td>
-                    <td>{{ order_trip.cost }}</td>
+                    <td style="vertical-align: middle; text-align: center; padding-left: 0;">
+                        <div style="display: inline-flex; align-items: center;">
+                            <form method="post" action="{{ url_for('quantity_adult_decrease') }}"
+                                  style="margin: 0 5px;">
+                                <input type="number" name="trip_id" value="{{order_trip.trip.id}}" hidden="">
+                                <button type="submit" class="btn btn-light">⬇</button>
+                            </form>
+                            <span>{{ order_trip.adults_quantity }}</span>
+                            <form method="post" action="{{ url_for('quantity_adult_increase') }}"
+                                  style="margin: 0 5px;">
+                                <input type="number" name="trip_id" value="{{order_trip.trip.id}}" hidden="">
+                                <button type="submit" class="btn btn-light">⬆</button>
+                            </form>
+                        </div>
+                    </td>
+                    <td style="vertical-align: middle; text-align: center; padding-left: 0;">
+                        <div style="display: inline-flex; align-items: center;">
+                            <form method="post" action="{{ url_for('quantity_children_decrease') }}"
+                                  style="margin: 0 5px;">
+                                <input type="number" name="trip_id" value="{{order_trip.trip.id}}" hidden="">
+                                <button type="submit" class="btn btn-light">⬇</button>
+                            </form>
+                            <span>{{ order_trip.children_quantity }}</span>
+                            <form method="post" action="{{ url_for('quantity_children_increase') }}"
+                                  style="margin: 0 5px;">
+                                <input type="number" name="trip_id" value="{{order_trip.trip.id}}" hidden="">
+                                <button type="submit" class="btn btn-light">⬆</button>
+                            </form>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: inline-flex; align-items: center;">
+                        {{ order_trip.cost|round(2) }}
+                            <form method="post" action="{{ url_for('delete_people_quantity') }}" style="margin: 0 5px;">
+                                <input type="number" name="trip_id" value="{{order_trip.trip.id}}" hidden="">
+                                <button type="submit" class="btn btn-light">&#x274C;</button>
+                            </form>
+                        </div>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>

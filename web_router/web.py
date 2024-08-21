@@ -14,6 +14,138 @@ templates = Jinja2Templates(directory="templates")
 web_router = APIRouter(prefix="")
 
 
+@web_router.post("/quantity-adult-decrease")
+def quantity_adult_decrease(
+    request: Request, trip_id: int = Form(), user=Depends(get_user_web)
+):
+    trip = dao.get_trip_by_id_dao(trip_id)
+    if not all([user, trip]):
+        context = {
+            "request": request,
+            "trips": get_all_trips_dao(50, 0, ""),
+            "title": "Main page",
+            "user": user,
+        }
+        return templates.TemplateResponse("index.html", context=context)
+    order: Order = dao.get_or_create(Order, user_id=user.id, is_closed=False)
+    order_trip: OrderTrip = dao.get_or_create(
+        OrderTrip, order_id=order.id, trip_id=trip_id
+    )
+    if order_trip.adults_quantity > 1:
+        order_trip.adults_quantity -= 1
+        session.add(order_trip)
+        session.commit()
+        session.refresh(order_trip)
+    redirect_url = request.url_for("get_cart")
+    response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
+    return response
+
+
+@web_router.post("/quantity-adult-increase")
+def quantity_adult_increase(
+    request: Request, trip_id: int = Form(), user=Depends(get_user_web)
+):
+    trip = dao.get_trip_by_id_dao(trip_id)
+    if not all([user, trip]):
+        context = {
+            "request": request,
+            "trips": get_all_trips_dao(50, 0, ""),
+            "title": "Main page",
+            "user": user,
+        }
+        return templates.TemplateResponse("index.html", context=context)
+    order: Order = dao.get_or_create(Order, user_id=user.id, is_closed=False)
+    order_trip: OrderTrip = dao.get_or_create(
+        OrderTrip, order_id=order.id, trip_id=trip_id
+    )
+    order_trip.adults_quantity += 1
+    session.add(order_trip)
+    session.commit()
+    session.refresh(order_trip)
+    redirect_url = request.url_for("get_cart")
+    response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
+    return response
+
+
+@web_router.post("/quantity-children-decrease")
+def quantity_children_decrease(
+    request: Request, trip_id: int = Form(), user=Depends(get_user_web)
+):
+    trip = dao.get_trip_by_id_dao(trip_id)
+    if not all([user, trip]):
+        context = {
+            "request": request,
+            "trips": get_all_trips_dao(50, 0, ""),
+            "title": "Main page",
+            "user": user,
+        }
+        return templates.TemplateResponse("index.html", context=context)
+    order: Order = dao.get_or_create(Order, user_id=user.id, is_closed=False)
+    order_trip: OrderTrip = dao.get_or_create(
+        OrderTrip, order_id=order.id, trip_id=trip_id
+    )
+    if order_trip.children_quantity > 0:
+        order_trip.children_quantity -= 1
+        session.add(order_trip)
+        session.commit()
+        session.refresh(order_trip)
+    redirect_url = request.url_for("get_cart")
+    response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
+    return response
+
+
+@web_router.post("/quantity-children-increase")
+def quantity_children_increase(
+    request: Request, trip_id: int = Form(), user=Depends(get_user_web)
+):
+    trip = dao.get_trip_by_id_dao(trip_id)
+    if not all([user, trip]):
+        context = {
+            "request": request,
+            "trips": get_all_trips_dao(50, 0, ""),
+            "title": "Main page",
+            "user": user,
+        }
+        return templates.TemplateResponse("index.html", context=context)
+    order: Order = dao.get_or_create(Order, user_id=user.id, is_closed=False)
+    order_trip: OrderTrip = dao.get_or_create(
+        OrderTrip, order_id=order.id, trip_id=trip_id
+    )
+    order_trip.children_quantity += 1
+    session.add(order_trip)
+    session.commit()
+    session.refresh(order_trip)
+    redirect_url = request.url_for("get_cart")
+    response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
+    return response
+
+
+@web_router.post("/delete-people-quantity")
+def delete_people_quantity(
+    request: Request, trip_id: int = Form(), user=Depends(get_user_web)
+):
+    trip = dao.get_trip_by_id_dao(trip_id)
+    if not all([user, trip]):
+        context = {
+            "request": request,
+            "trips": get_all_trips_dao(50, 0, ""),
+            "title": "Main page",
+            "user": user,
+        }
+        return templates.TemplateResponse("index.html", context=context)
+    order: Order = dao.get_or_create(Order, user_id=user.id, is_closed=False)
+    order_trip: OrderTrip = dao.get_or_create(
+        OrderTrip, order_id=order.id, trip_id=trip_id
+    )
+    order_trip.adults_quantity, order_trip.children_quantity = 0, 0
+    session.add(order_trip)
+    session.commit()
+    session.refresh(order_trip)
+    redirect_url = request.url_for("get_cart")
+    response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
+    return response
+
+
 @web_router.get("/trip/{trip_id}", include_in_schema=True)
 def get_trip_by_id_web(request: Request, trip_id: int, user=Depends(get_user_web)):
     trip = get_trip_by_id_dao(trip_id)
