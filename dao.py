@@ -32,17 +32,24 @@ def create_trip_dao(
     return trip
 
 
-def get_all_trips_dao(limit: int, skip: int, country: str | None) -> list[Trip]:
+def get_all_trips_dao(
+    limit: int,
+    skip: int,
+    country: str | None,
+    price: int | float | None,
+    checkin_date_from: date | None,
+    checkin_date_to: date | None,
+) -> list[Trip]:
+    session_query = session.query(Trip)
     if country:
-        trips = (
-            session.query(Trip)
-            .filter(Trip.country.icontains(country))
-            .limit(limit)
-            .offset(skip)
-            .all()
-        )
-    else:
-        trips = session.query(Trip).limit(limit).offset(skip).all()
+        session_query = session_query.filter(Trip.country.icontains(country))
+    if price:
+        session_query = session_query.filter(Trip.price <= price)
+    if checkin_date_from:
+        session_query = session_query.filter(Trip.checkin_date >= checkin_date_from)
+    if checkin_date_to:
+        session_query = session_query.filter(Trip.checkin_date <= checkin_date_to)
+    trips = session_query.limit(limit).offset(skip).all()
     return trips
 
 

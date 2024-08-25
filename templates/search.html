@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method="post" action="{{ url_for('index') }}">
+    <div class="mb-3">
+        <label for="exampleCountry" class="form-label">Where are we going?</label>
+        <input class="form-control me-2" type="search" name="country" id="exampleCountry" placeholder=""
+               aria-label="Search">
+    </div>
+    <hr>
+    <div class="row g-3 align-items-center">
+        <div class="col-auto">
+            <label for="inputPrice" class="col-form-label">Price up to</label>
+        </div>
+        <div class="col-auto" style="width: 4rem; padding: 0">
+            <input id="inputPrice" class="form-control me-2" aria-describedby="priceHelpInline" name="price">
+        </div>
+        <div class="col-auto">
+            <label for="inputPrice" class="col-form-label">$ / person</label>
+        </div>
+    </div>
+    <hr>
+    <div class="row g-4 align-items-center">
+        <div class="col-auto">
+            <label for="exampleCheckinFrom" class="form-label">Сheck-in date from</label>
+        </div>
+        <div class="col-auto" style="padding: 0; width: 12rem;">
+            <input class="form-control me-2" type="search" name="checkin_date_from" id="exampleCheckinFrom"
+                   placeholder="example: 2024-09-01" aria-label="Search">
+        </div>
+        <div class="col-auto">
+            <label for="exampleCheckinTo" class="form-label">to</label>
+        </div>
+        <div class="col-auto" style="padding: 0; width: 12rem;">
+            <input class="form-control me-2" type="search" name="checkin_date_to" id="exampleCheckinTo"
+                   placeholder="example: 2024-09-01" aria-label="Search">
+        </div>
+    </div>
+    <hr>
+    <button class="btn btn-outline-success" type="submit">Search</button>
+</form>
+{% endblock %}

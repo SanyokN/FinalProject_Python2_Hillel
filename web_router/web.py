@@ -1,3 +1,5 @@
+from datetime import date
+
 from fastapi import APIRouter, BackgroundTasks, Depends, Form, status
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse
@@ -179,10 +181,19 @@ def get_cart(request: Request, user=Depends(get_user_web)):
 
 @web_router.get("/", include_in_schema=True)
 @web_router.post("/", include_in_schema=True)
-def index(request: Request, user=Depends(get_user_web), query: str = Form(None)):
+def index(
+    request: Request,
+    user=Depends(get_user_web),
+    country: str = Form(None),
+    price: int | float = Form(None),
+    checkin_date_from: date = Form(None),
+    checkin_date_to: date = Form(None),
+):
     context = {
         "request": request,
-        "trips": get_all_trips_dao(50, 0, query),
+        "trips": get_all_trips_dao(
+            50, 0, country, price, checkin_date_from, checkin_date_to
+        ),
         "title": "Main page",
         "user": user,
     }
@@ -214,7 +225,14 @@ def web_register(
     context = {
         "request": request,
         "title": "Register",
-        "trips": get_all_trips_dao(limit=100, skip=0, country=""),
+        "trips": get_all_trips_dao(
+            limit=100,
+            skip=0,
+            country="",
+            price=None,
+            checkin_date_from=date.today(),
+            checkin_date_to=None,
+        ),
         "user": maybe_user,
     }
     if not maybe_user:
@@ -253,7 +271,14 @@ def web_login(
     if verify_password(password, maybe_user.hashed_password):
         context = {
             "title": "Login",
-            "trips": get_all_trips_dao(limit=100, skip=0, country=""),
+            "trips": get_all_trips_dao(
+                limit=100,
+                skip=0,
+                country="",
+                price=None,
+                checkin_date_from=date.today(),
+                checkin_date_to=None,
+            ),
             "user": maybe_user,
             **context,
         }
@@ -270,7 +295,7 @@ def web_login(
 def web_logout(request: Request):
     context = {
         "request": request,
-        "trips": get_all_trips_dao(50, 0, ""),
+        "trips": get_all_trips_dao(50, 0, "", None, date.today(), None),
         "title": "Main page",
         "user": None,
     }
@@ -301,5 +326,16 @@ def add_trip_to_cart(
     session.refresh(order_trip)
     redirect_url = request.url_for("index")
     response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
+
+    
+@web_router.get("/search/")
+def search(request: Request, user=Depends(get_user_web)):
+    context = {
+        "request": request,
+        "trips": get_all_trips_dao(50, 0, "", None, date.today(), None),
+        "title": "Search for trips",
+        "user": user,
+    }
+    response = templates.TemplateResponse("search.html", context=context)
     response_with_cookies = set_cookies_web(user, response)
     return response_with_cookies
