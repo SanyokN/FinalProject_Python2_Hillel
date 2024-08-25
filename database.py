@@ -1,8 +1,9 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import (UUID, Boolean, Column, DateTime, Float, Integer,
-                        Sequence, String, Text, create_engine)
+from sqlalchemy import (UUID, Boolean, Column, Date, DateTime, Float,
+                        ForeignKey, Integer, Sequence, String, Text,
+                        create_engine)
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 import config
@@ -19,17 +20,18 @@ class BaseInfoMixin:
 class Trip(BaseInfoMixin, Base):
     __tablename__ = "trips"
 
-    checkin_date = Column(Integer, nullable=False)
-    checkout_date = Column(Integer, nullable=False)
+    checkin_date = Column(Date, nullable=False)
+    checkout_date = Column(Date, nullable=False)
     country = Column(String, nullable=False)
     price = Column(Float, nullable=False)
     hotel = Column(Text, nullable=False)
     description = Column(Text)
+    cover_url = Column(Text, nullable=False)
 
     def __str__(self):
         return (
-            f"<Trip: {self.checkin_date=}; {self.checkout_date=}, "
-            f"{self.country=}, {self.price=}, {self.hotel=}>"
+            f"<Trip: {self.id=}, {self.checkin_date=} - {self.checkout_date=}, "
+            f"{self.country=}, {self.price=} $, {self.hotel=}>"
         )
 
     __repr__ = __str__
@@ -52,9 +54,36 @@ class User(BaseInfoMixin, Base):
     __repr__ = __str__
 
 
-engine = create_engine(config.DB_PATH, echo=config.DEBUG)
+class Order(BaseInfoMixin, Base):
+    __tablename__ = "orders"
+    user_id = Column(ForeignKey("users.id"), nullable=False)
+    is_closed = Column(Boolean, default=False)
 
-Session = sessionmaker(bind=engine)
+    def __str__(self):
+        return f"<Order: {self.id=}; {self.user_id=}; {self.is_closed=}>"
+
+    __repr__ = __str__
+
+
+class OrderTrip(BaseInfoMixin, Base):
+    __tablename__ = "order_trips"
+    order_id = Column(ForeignKey("orders.id"), nullable=False)
+    trip_id = Column(ForeignKey("trips.id"), nullable=False)
+    price = Column(Float, nullable=False, default=10.0)
+    people_quantity = Column(Integer, nullable=False, default=0)
+
+    @property
+    def cost(self):
+        return self.people_quantity * self.price
+
+    def __str__(self):
+        return f"<OrderTrip: {self.id=}; {self.order_id=}; {self.people_quantity=}; {self.price=}, cost={self.cost}>"
+
+    __repr__ = __str__
+
+
+engine = create_engine(config.DB_PATH, echo=config.DEBUG)
+Session = sessionmaker(bind=engine, expire_on_commit=False)
 session = Session()
 
 

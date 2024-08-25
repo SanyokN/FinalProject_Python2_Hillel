@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if error %}
+<h1>You entered an incorrect email or password</h1>
+<h3>Try again</h3>
+{% else %}
+<h1>Please enter your email and password</h1>
+{% endif %}
+<form method="post">
+    <div class="mb-3">
+        <label for="exampleInputEmail" class="form-label">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp" required
+               name="email" value="{{email_value}}">
+
+    </div>
+    <div class="mb-3">
+        <label for="exampleInputPassword" class="form-label">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword" required minlength="8" name="password">
+        <div id="emailPasswordHelp" class="form-text">We'll never share your email and password with anyone else.</div>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

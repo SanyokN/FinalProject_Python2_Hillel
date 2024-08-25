@@ -32,8 +32,8 @@ def send_email(
     if attachment:
         is_file_exists = os.path.exists(attachment)
         if not is_file_exists:
-            print(f"file {attachment} doesn`t exist")
-            raise ValueError(f"file {attachment} doesn`t exist")
+            print(f"file {attachment} does not exist")
+            raise ValueError(f"file {attachment} does not exist")
         else:
             basename = os.path.basename(attachment)
             filesize = os.path.getsize(attachment)
