@@ -326,8 +326,10 @@ def add_trip_to_cart(
     session.refresh(order_trip)
     redirect_url = request.url_for("index")
     response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
+    response_with_cookies = set_cookies_web(user, response)
+    return response_with_cookies
 
-    
+
 @web_router.get("/search/")
 def search(request: Request, user=Depends(get_user_web)):
     context = {
